@@ -1,0 +1,88 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable Global Helpers
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 64 && id.matches('^[a-zA-Z0-9_-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Validation Blueprint: Pastor
+    function isValidPastor(data) {
+      return data.keys().hasAll([
+        'id', 'name', 'zone', 'raisedAmount', 'fundraisingNote', 'accessPin', 'order', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'name', 'zone', 'raisedAmount', 'fundraisingNote', 'accessPin', 'order', 'updatedAt'
+      ]) &&
+      isValidId(data.id) &&
+      data.name is string && data.name.size() >= 1 && data.name.size() <= 100 &&
+      data.zone is string && data.zone.size() <= 100 &&
+      data.raisedAmount is number && data.raisedAmount >= 0 &&
+      data.fundraisingNote is string && data.fundraisingNote.size() <= 500 &&
+      data.accessPin is string && data.accessPin.size() >= 4 && data.accessPin.size() <= 12 &&
+      data.order is number && data.order >= 0 &&
+      data.updatedAt is string && data.updatedAt.size() <= 64;
+    }
+
+    // Validation Blueprint: Participant
+    function isValidParticipant(data) {
+      return data.keys().hasAll([
+        'id', 'lastName', 'firstName', 'fullName', 'phone', 'pastorId',
+        'paymentStatus', 'amountPaid', 'cnibRectoUrl', 'cnibVersoUrl',
+        'cnibUpdatedAt', 'notes', 'orderIndex', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'lastName', 'firstName', 'fullName', 'phone', 'pastorId',
+        'paymentStatus', 'amountPaid', 'cnibRectoUrl', 'cnibVersoUrl',
+        'cnibUpdatedAt', 'notes', 'orderIndex', 'updatedAt'
+      ]) &&
+      isValidId(data.id) &&
+      data.lastName is string && data.lastName.size() <= 100 &&
+      data.firstName is string && data.firstName.size() <= 100 &&
+      data.fullName is string && data.fullName.size() >= 1 && data.fullName.size() <= 200 &&
+      data.phone is string && data.phone.size() <= 60 &&
+      isValidId(data.pastorId) &&
+      data.paymentStatus is string && (data.paymentStatus == 'paid' || data.paymentStatus == 'partial' || data.paymentStatus == 'pending') &&
+      data.amountPaid is number && data.amountPaid >= 0 &&
+      data.cnibRectoUrl is string && data.cnibRectoUrl.size() <= 350000 &&
+      data.cnibVersoUrl is string && data.cnibVersoUrl.size() <= 350000 &&
+      data.cnibUpdatedAt is string && data.cnibUpdatedAt.size() <= 64 &&
+      data.notes is string && data.notes.size() <= 500 &&
+      data.orderIndex is number && data.orderIndex >= 0 &&
+      data.updatedAt is string && data.updatedAt.size() <= 64;
+    }
+
+    // Connection test endpoint required by Firebase boot check
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // Pastors Collection
+    match /pastors/{pastorId} {
+      allow read: if true;
+      allow create, update: if isValidId(pastorId) &&
+        isValidPastor(incoming()) &&
+        incoming().id == pastorId;
+      allow delete: if isValidId(pastorId);
+    }
+
+    // Participants Collection
+    match /participants/{participantId} {
+      allow read: if true;
+      allow create, update: if isValidId(participantId) &&
+        isValidParticipant(incoming()) &&
+        incoming().id == participantId;
+      allow delete: if isValidId(participantId);
+    }
+  }
+}

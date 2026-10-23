@@ -1,0 +1,6 @@
+{
+  "summary":  "Mise à jour du plan d'implémentation intégrant : (1) la prévisualisation interactive avec séparation et reconnaissance automatique des Nom, Prénoms et Téléphone lors de l'import de liste, (2) la fiche détaillée au clic sur un participant avec deux champs d'upload pour la CNIB Recto et la CNIB Verso, et (3) une page dédiée « Galerie & Exploitation des CNIB » permettant de visualiser et télécharger les photos (Recto/Verso) de chaque participant.",
+  "updatedAt":  "2026-10-22T12:19:14.335515207Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

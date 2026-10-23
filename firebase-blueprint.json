@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "Pastor": {
+      "title": "Pastor",
+      "description": "Un pasteur ou leader de groupe (Ps / LP) supervisant une liste de participants et mobilisant des fonds pour la conférence Homecoming Ghana 2026.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifiant unique du pasteur",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nom complet ou titre du pasteur (ex: Ps Pierre, LP Esperance)",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "zone": {
+          "type": "string",
+          "description": "Zone géographique ou précision de liste (ex: Koudougou, Zone 1)",
+          "maxLength": 100
+        },
+        "raisedAmount": {
+          "type": "number",
+          "description": "Montant total d'argent soulevé par ce pasteur (en FCFA)"
+        },
+        "fundraisingNote": {
+          "type": "string",
+          "description": "Note ou détail concernant le montant soulevé",
+          "maxLength": 500
+        },
+        "accessPin": {
+          "type": "string",
+          "description": "Code d'accès simple du pasteur pour modifier sa liste",
+          "minLength": 4,
+          "maxLength": 12
+        },
+        "order": {
+          "type": "number",
+          "description": "Ordre d'affichage du groupe pastoral"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Date ISO de dernière mise à jour",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "zone",
+        "raisedAmount",
+        "fundraisingNote",
+        "accessPin",
+        "order",
+        "updatedAt"
+      ]
+    },
+    "Participant": {
+      "title": "Participant",
+      "description": "Un participant inscrit à la conférence Homecoming Ghana (3-6 novembre 2026) rattaché à un pasteur, avec suivi du paiement et photos CNIB Recto/Verso.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifiant unique du participant",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Nom de famille du participant",
+          "maxLength": 100
+        },
+        "firstName": {
+          "type": "string",
+          "description": "Prénoms du participant",
+          "maxLength": 100
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Nom et prénoms complets",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "phone": {
+          "type": "string",
+          "description": "Numéro de téléphone du participant",
+          "maxLength": 60
+        },
+        "pastorId": {
+          "type": "string",
+          "description": "Identifiant du pasteur référent",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Statut de paiement du participant",
+          "enum": [
+            "paid",
+            "partial",
+            "pending"
+          ]
+        },
+        "amountPaid": {
+          "type": "number",
+          "description": "Montant individuel payé en FCFA"
+        },
+        "cnibRectoUrl": {
+          "type": "string",
+          "description": "Image compressée (Data URL JPEG) du recto de la CNIB",
+          "maxLength": 350000
+        },
+        "cnibVersoUrl": {
+          "type": "string",
+          "description": "Image compressée (Data URL JPEG) du verso de la CNIB",
+          "maxLength": 350000
+        },
+        "cnibUpdatedAt": {
+          "type": "string",
+          "description": "Date ISO de mise à jour des photos CNIB",
+          "maxLength": 64
+        },
+        "notes": {
+          "type": "string",
+          "description": "Notes ou observations sur le participant",
+          "maxLength": 500
+        },
+        "orderIndex": {
+          "type": "number",
+          "description": "Numéro d'ordre d'inscription"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Date ISO de dernière modification",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "lastName",
+        "firstName",
+        "fullName",
+        "phone",
+        "pastorId",
+        "paymentStatus",
+        "amountPaid",
+        "cnibRectoUrl",
+        "cnibVersoUrl",
+        "cnibUpdatedAt",
+        "notes",
+        "orderIndex",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/pastors/{pastorId}": {
+      "schema": {
+        "$ref": "#/entities/Pastor"
+      },
+      "description": "Collection des pasteurs et leaders de groupes pour Homecoming Ghana 2026."
+    },
+    "/participants/{participantId}": {
+      "schema": {
+        "$ref": "#/entities/Participant"
+      },
+      "description": "Collection des participants rattachés aux pasteurs avec statut de paiement et photos CNIB."
+    }
+  }
+}

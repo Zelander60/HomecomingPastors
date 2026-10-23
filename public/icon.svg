@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#B45309" />
+  <rect x="36" y="36" width="440" height="440" rx="84" fill="#0F172A" />
+  <!-- Ghana Star & Homecoming Emblem -->
+  <polygon points="256,108 279,176 351,176 293,218 315,286 256,244 197,286 219,218 161,176 233,176" fill="#F59E0B" />
+  <text x="256" y="365" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="72" fill="#FFFFFF" letter-spacing="2">HC 26</text>
+  <text x="256" y="420" text-anchor="middle" font-family="sans-serif" font-weight="600" font-size="32" fill="#FCD34D" letter-spacing="6">GHANA</text>
+</svg>
